@@ -19,9 +19,15 @@
 
             for (const link of links) {
                 const isBlocked = await checkIfBlocked(link);
-                const result = document.createElement('p');
-                result.textContent = `${link} is ${isBlocked ? 'blocked' : 'not blocked'}.`;
-                resultsDiv.appendChild(result);
+                if (!isBlocked) {
+                    const linkElement = document.createElement('a');
+                    linkElement.href = link;
+                    linkElement.textContent = link;
+                    linkElement.target = '_blank'; // Open link in a new tab
+                    const resultItem = document.createElement('p');
+                    resultItem.appendChild(linkElement);
+                    resultsDiv.appendChild(resultItem);
+                }
             }
         });
 
