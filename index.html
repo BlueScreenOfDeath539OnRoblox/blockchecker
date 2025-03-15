@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Checker</title>
+</head>
+<body>
+    <h1>URL Checker</h1>
+    <textarea id="links" rows="10" cols="50" placeholder="Enter URLs separated by newlines"></textarea><br>
+    <button id="start">Start</button>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('start').addEventListener('click', async () => {
+            const links = document.getElementById('links').value.split('\n').map(link => link.trim()).filter(link => link);
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            for (const link of links) {
+                const isBlocked = await checkIfBlocked(link);
+                const result = document.createElement('a');
+                if (!isBlocked) {
+                	result.textContent = link;
+                }
+                // result.textContent = `${link} is ${isBlocked ? 'blocked' : 'not blocked'}.`
+                result.href = link;
+                resultsDiv.appendChild(result);
+                resultsDiv.appendChild(document.createElement('br'));
+            }
+        });
+
+        async function checkIfBlocked(url) {
+            try {
+                // Make a request to the URL
+                const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+
+                // This assumes that blocked URLs will not return a valid response
+                // Replace this logic with specific checks for Securly's behavior if known
+                return false; // URL is accessible, so not blocked
+            } catch (error) {
+                // If there's an error, assume it's blocked
+                return true; // URL is blocked
+            }
+        }
+    </script>
+</body>
+</html>
